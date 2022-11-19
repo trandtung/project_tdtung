@@ -1,0 +1,27 @@
+@import 'normalize.css';
+:root{
+    --primary: #fe2c55;
+    --black: #000;
+    --white: #fff;
+    --text-color: #333;
+
+}
+* {
+    box-sizing: border-box;
+}
+button,input,select ,[tabindex]{
+    outline: none;
+    border: none;
+}
+p{
+    margin: 0;
+}
+html{
+    font-size: 100%;
+}
+li{
+    list-style: none;
+}
+.cursorPointer{
+    cursor: pointer;
+}

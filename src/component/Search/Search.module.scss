@@ -1,0 +1,21 @@
+.search{
+    width: 400px;
+    height: 50px;
+    background-color: rgb(241 241 242);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &--height{
+        height: 100%;
+        background-color: transparent;
+    }
+    
+    &-select{
+        width: 20%;
+        padding-left: 10px;
+    }
+    &-input{
+        width: 60%;
+    }
+}
