@@ -13,8 +13,7 @@ const cx = classNames.bind(styles);
 
 function Home() {
   const dispatch = useDispatch();
-  let location = useLocation();
-  console.log(location);
+ 
   // const fetchCategories = useCallback(async () => {
   //   await dispatch(getCategories());
   // }, [dispatch]);
