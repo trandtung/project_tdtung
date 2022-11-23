@@ -5,21 +5,17 @@ import {
   Input,
   Button,
   Radio,
-  Select,
-  Cascader,
-  DatePicker,
   InputNumber,
-  TreeSelect,
   Switch,
-  Checkbox,
   Upload,
   Modal,
+  Image,
+  Card,
 } from "antd";
 import axios from "axios";
 import FormData from "form-data";
 import { baseApiPredict } from "../../../request/apiPredict";
 const { TextArea } = Input;
-const formData = new FormData();
 
 const FormDisabledDemo = () => {
   const [statePredict, setStatePredict] = useState(false);
@@ -27,14 +23,10 @@ const FormDisabledDemo = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [componentDisabled, setComponentDisabled] = useState(true);
-
   const [selectedFile, setSelectedFile] = useState(null);
-  const onFormLayoutChange = ({ disabled }) => {
-    setComponentDisabled(disabled);
-  };
-  console.log(listImgPredicted)
-  const handlePredict = async () => {
+
+  const handlePredict = async (values) => {
+    console.log(values)
     let formData = new FormData();
     const listImg = selectedFile.map((item, index) => {
       return formData.append("file", item.originFileObj);
@@ -86,7 +78,6 @@ const FormDisabledDemo = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
-          onValuesChange={onFormLayoutChange}
           onFinish={handlePredict}
           // disabled={componentDisabled}
         >
@@ -139,21 +130,39 @@ const FormDisabledDemo = () => {
               Chẩn đoán
             </Button>
           </Form.Item>
-
-          {/* <input type="file" onChange={handleFileSelect}/> */}
         </Form>
       ) : (
         <>
+          <p>Chẩn đoán</p>
           {listImgPredicted &&
             listImgPredicted.map((item, index) => (
-              <img
-                key={item.img}
-                src={`${baseApiPredict}${item.img}`}
-                width="500"
-                height="600"
-              ></img>
+              <Card
+                title="Card title"
+                bordered={false}
+                style={{ display: "flex" }}
+              >
+                <Image
+                  key={item.img}
+                  src={`${baseApiPredict}${item.img}`}
+                  width={500}
+                  height={600}
+                />
+                <div>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                  <p>Card content</p>
+                </div>
+              </Card>
             ))}
-          <Button type="primary">Kết nối mới</Button>
+          <Button
+            type="primary"
+            onClick={(e) => {
+              setStatePredict(false);
+            }}
+          >
+            Kết nối mới
+          </Button>
+          <Button type="primary">Lưu thông tin</Button>
         </>
       )}
     </>
