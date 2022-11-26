@@ -1,21 +1,10 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import {
-  Form,
-  Input,
-  Button,
-  Radio,
-  InputNumber,
-  Switch,
-  Upload,
-  Modal,
-  Image,
-  Card,
-} from "antd";
+import FormClientInfo from "./components/FormClientInfo";
+import { Form, Button, Upload, Modal, Image, Card, Checkbox } from "antd";
 import axios from "axios";
 import FormData from "form-data";
 import { baseApiPredict } from "../../../request/apiPredict";
-const { TextArea } = Input;
 
 const FormDisabledDemo = () => {
   const [statePredict, setStatePredict] = useState(false);
@@ -24,32 +13,34 @@ const FormDisabledDemo = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [componentDisabled, setComponentDisabled] = useState(true);
+  const [valuesFormClientInfo, setValuesFormClientInfo] = useState();
+  const handlePredict = (values) => {
+    setValuesFormClientInfo(values);
+    // let formData = new FormData();
+    // const listImg = selectedFile.map((item, index) => {
+    //   return formData.append("file", item.originFileObj);
+    // });
 
-  const handlePredict = async (values) => {
-    console.log(values)
-    let formData = new FormData();
-    const listImg = selectedFile.map((item, index) => {
-      return formData.append("file", item.originFileObj);
-    });
-
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${baseApiPredict}predict`,
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then(function (response) {
-          setStatePredict(true);
-          setListImgPredicted(response.data.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await axios({
+    //     method: "post",
+    //     url: `${baseApiPredict}predict`,
+    //     data: formData,
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //   })
+    //     .then(function (response) {
+    setStatePredict(true);
+    //       setListImgPredicted(response.data.data);
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
+  const onFinishFailed = () => {};
   const handleCancel = () => setPreviewOpen(false);
 
   const getBase64 = (file) =>
@@ -71,6 +62,7 @@ const FormDisabledDemo = () => {
   const listFile = (e) => {
     setSelectedFile(e.fileList);
   };
+
   return (
     <>
       {!statePredict ? (
@@ -79,6 +71,8 @@ const FormDisabledDemo = () => {
           wrapperCol={{ span: 14 }}
           layout="horizontal"
           onFinish={handlePredict}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
           // disabled={componentDisabled}
         >
           <Form.Item label="Upload" valuePropName="fileList">
@@ -104,27 +98,8 @@ const FormDisabledDemo = () => {
               <img alt="example" style={{ width: "100%" }} src={previewImage} />
             </Modal>
           </Form.Item>
-
-          <Form.Item label="Radio">
-            <Radio.Group>
-              <Radio value="apple"> Apple </Radio>
-              <Radio value="pear"> Pear </Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Input">
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="InputNumber">
-            <InputNumber />
-          </Form.Item>
-          <Form.Item label="TextArea">
-            <TextArea rows={4} />
-          </Form.Item>
-          <Form.Item label="Switch" valuePropName="checked">
-            <Switch />
-          </Form.Item>
-
+          {/* Client infomation form */}
+          <FormClientInfo />
           <Form.Item label=" ">
             <Button type="primary" htmlType="submit">
               Chẩn đoán
@@ -134,6 +109,21 @@ const FormDisabledDemo = () => {
       ) : (
         <>
           <p>Chẩn đoán</p>
+          <Checkbox
+            checked={componentDisabled}
+            onChange={(e) => setComponentDisabled(e.target.checked)}
+          >
+            Form disabled
+          </Checkbox>
+          {/* Client infomation form */}
+          <Form
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 14 }}
+            disabled={componentDisabled}
+            initialValues={valuesFormClientInfo}
+          >
+            <FormClientInfo />
+          </Form>
           {listImgPredicted &&
             listImgPredicted.map((item, index) => (
               <Card

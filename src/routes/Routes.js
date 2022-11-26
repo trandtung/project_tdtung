@@ -7,11 +7,11 @@ import { getTokenStorage } from "../utils/auth.util";
 
 function Routes() {
   const navigate = useNavigate();
-  const accessToken = true;
+  const accessToken = getTokenStorage();
 
-  // useEffect(() => {
-  //   !accessToken && navigate("/sign-in");
-  // }, [accessToken, navigate]);
+  useEffect(() => {
+    !accessToken && navigate("/sign-in");
+  }, [accessToken, navigate]);
 
   return (
     <>
