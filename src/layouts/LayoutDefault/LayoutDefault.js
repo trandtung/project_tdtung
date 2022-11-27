@@ -20,13 +20,14 @@ function LayoutDefault({ children }) {
       title: "Chuẩn đoán",
     },
     {
-      link: "/account",
-      title: "Tài khoản",
-    },
-    {
       link: "/client",
       title: "Danh sách bệnh nhân",
     },
+    {
+      link: "/account",
+      title: "Tài khoản",
+    },
+    
   ];
 
   return (

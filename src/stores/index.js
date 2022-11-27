@@ -8,6 +8,7 @@ import authSlice from "./slice/authSlice";
 import cateSlice from "./slice/categoriesSlice";
 import taskSlice from "./slice/taskSlice";
 import filterSlice from "./slice/searchSlice";
+import predictImgSlice from "./slice/predictImgSlice";
 
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   categories: cateSlice.reducer,
   taskSlice: taskSlice.reducer,
   filterSlice: filterSlice.reducer,
+  predictImgSlice:predictImgSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

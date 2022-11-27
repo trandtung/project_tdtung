@@ -5,28 +5,28 @@ function FormClientInfo() {
     <>
       <Form.Item
         label="Họ tên"
-        name="username"
+        name="name"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item label="Tuổi" name="InputNumber">
+      <Form.Item label="Tuổi" name="age">
         <InputNumber />
       </Form.Item>
-      <Form.Item label="Giới tính" name="gioitinh">
+      <Form.Item label="Giới tính" name="gender">
         <Radio.Group>
-          <Radio value="apple"> Nam </Radio>
-          <Radio value="pear"> Nữ </Radio>
+          <Radio value="Nam"> Nam </Radio>
+          <Radio value="Nữ"> Nữ </Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item
-        label="Dịa chỉ"
+        label="Địa chỉ"
         name="address"
         rules={[{ required: true, message: "Please input your username!" }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item label="Mô tả">
+      <Form.Item label="Mô tả" name={"description"}>
         <TextArea rows={4} />
       </Form.Item>
     </>

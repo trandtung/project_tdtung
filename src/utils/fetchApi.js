@@ -8,7 +8,26 @@ export const loginApi = async (user) => {
       return error;
     });
 };
+// api mới
 
+// client
+export const saveClientPredictApi = async (data) => {
+  return await ApiClient.post(`/client/add`, data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+
+
+
+
+
+
+
+
+// api cũ
 export const updatePasswordApi = async (user) => {
   return await ApiClient.patch(`/api/users/${user.id}`, {
     username: user.username,

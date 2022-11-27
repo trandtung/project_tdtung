@@ -6,41 +6,51 @@ import axios from "axios";
 import FormData from "form-data";
 import { baseApiPredict } from "../../../request/apiPredict";
 
+import { saveClientInfo } from "../../../stores/slice/predictImgSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../../component/Loading/Loading";
+
 const FormDisabledDemo = () => {
+  const dispatch = useDispatch();
+  const { statePredictImg } = useSelector((state) => ({
+    statePredictImg: state.predictImgSlice,
+  }));
+
   const [statePredict, setStatePredict] = useState(false);
-  const [listImgPredicted, setListImgPredicted] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [componentDisabled, setComponentDisabled] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [listImgPredicted, setListImgPredicted] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [valuesFormClientInfo, setValuesFormClientInfo] = useState();
-  const handlePredict = (values) => {
-    setValuesFormClientInfo(values);
-    // let formData = new FormData();
-    // const listImg = selectedFile.map((item, index) => {
-    //   return formData.append("file", item.originFileObj);
-    // });
 
-    // try {
-    //   const response = await axios({
-    //     method: "post",
-    //     url: `${baseApiPredict}predict`,
-    //     data: formData,
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //     .then(function (response) {
-    setStatePredict(true);
-    //       setListImgPredicted(response.data.data);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  const handlePredict = async (values) => {
+    setValuesFormClientInfo(values);
+    let formData = new FormData();
+    const listImg = selectedFile.map((item, index) => {
+      return formData.append("file", item.originFileObj);
+    });
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: `${baseApiPredict}predict`,
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then(function (response) {
+          setStatePredict(true);
+          setListImgPredicted(response.data.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const onFinishFailed = () => {};
+
   const handleCancel = () => setPreviewOpen(false);
 
   const getBase64 = (file) =>
@@ -63,6 +73,17 @@ const FormDisabledDemo = () => {
     setSelectedFile(e.fileList);
   };
 
+  const saveClient = async (values) => {
+    values.dataImage = listImgPredicted;
+    // console.log(values);
+    const response = await dispatch(saveClientInfo(values));
+    if (saveClientInfo.fulfilled.match(response)) {
+      setStatePredict(false);
+      setSelectedFile();
+      setListImgPredicted([]);
+    }
+  };
+
   return (
     <>
       {!statePredict ? (
@@ -71,7 +92,6 @@ const FormDisabledDemo = () => {
           wrapperCol={{ span: 14 }}
           layout="horizontal"
           onFinish={handlePredict}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
           // disabled={componentDisabled}
         >
@@ -121,38 +141,46 @@ const FormDisabledDemo = () => {
             wrapperCol={{ span: 14 }}
             disabled={componentDisabled}
             initialValues={valuesFormClientInfo}
+            onFinish={saveClient}
           >
             <FormClientInfo />
-          </Form>
-          {listImgPredicted &&
-            listImgPredicted.map((item, index) => (
-              <Card
-                title="Card title"
-                bordered={false}
-                style={{ display: "flex" }}
-              >
-                <Image
+
+            {listImgPredicted &&
+              listImgPredicted.map((item, index) => (
+                <Card
                   key={item.img}
-                  src={`${baseApiPredict}${item.img}`}
-                  width={500}
-                  height={600}
-                />
-                <div>
-                  <p>Card content</p>
-                  <p>Card content</p>
-                  <p>Card content</p>
-                </div>
-              </Card>
-            ))}
+                  title="Card title"
+                  bordered={false}
+                  style={{ display: "flex" }}
+                >
+                  <Image
+                    src={`${baseApiPredict}${item.img}`}
+                    width={500}
+                    height={600}
+                  />
+                  <div>
+                    <p>Card content</p>
+                    <p>Card content</p>
+                    <p>Card content</p>
+                  </div>
+                </Card>
+              ))}
+
+            <Button type="primary" htmlType="submit" disabled={false}>
+              Lưu thông tin
+            </Button>
+          </Form>
+          {statePredictImg.isLoading && <Loading />}
           <Button
             type="primary"
             onClick={(e) => {
               setStatePredict(false);
+              setSelectedFile();
+              setListImgPredicted([]);
             }}
           >
             Kết nối mới
           </Button>
-          <Button type="primary">Lưu thông tin</Button>
         </>
       )}
     </>
