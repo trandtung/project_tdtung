@@ -30,8 +30,9 @@ export const saveClientInfo = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await saveClientPredictApi(data);
+      console.log(response)
       if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
-        return response.data.data;
+        return response;
       }
       return rejectWithValue(response);
     } catch (error) {

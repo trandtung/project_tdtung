@@ -19,11 +19,29 @@ export const saveClientPredictApi = async (data) => {
     });
 };
 
+export const getClientsApi = async () => {
+  return await ApiClient.get(`/client`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
 
+export const getClientDetailApi = async (id) => {
+  return await ApiClient.get(`/client/${id}`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
 
-
-
-
+export const deleteClientApi = async (id) => {
+  return await ApiClient.delete(`/client/delete/${id}`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
 
 
 

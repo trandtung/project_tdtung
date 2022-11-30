@@ -5,10 +5,11 @@ import {
 } from "@reduxjs/toolkit";
 
 import authSlice from "./slice/authSlice";
-import cateSlice from "./slice/categoriesSlice";
-import taskSlice from "./slice/taskSlice";
-import filterSlice from "./slice/searchSlice";
+// import cateSlice from "./slice/categoriesSlice";
+// import taskSlice from "./slice/taskSlice";
+// import filterSlice from "./slice/searchSlice";
 import predictImgSlice from "./slice/predictImgSlice";
+import tableClientSlice from "./slice/tableClientSlice";
 
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
@@ -21,10 +22,11 @@ const persistConfig = {
 
 const reducer = combineReducers({
   auth: authSlice.reducer,
-  categories: cateSlice.reducer,
-  taskSlice: taskSlice.reducer,
-  filterSlice: filterSlice.reducer,
-  predictImgSlice:predictImgSlice.reducer,
+  // categories: cateSlice.reducer,
+  // taskSlice: taskSlice.reducer,
+  // filterSlice: filterSlice.reducer,
+  predictImgSlice: predictImgSlice.reducer,
+  tableClientSlice: tableClientSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

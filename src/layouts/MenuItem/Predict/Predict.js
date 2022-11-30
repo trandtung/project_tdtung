@@ -75,7 +75,6 @@ const FormDisabledDemo = () => {
 
   const saveClient = async (values) => {
     values.dataImage = listImgPredicted;
-    // console.log(values);
     const response = await dispatch(saveClientInfo(values));
     if (saveClientInfo.fulfilled.match(response)) {
       setStatePredict(false);

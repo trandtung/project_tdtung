@@ -20,7 +20,7 @@ function LayoutDefault({ children }) {
       title: "Chuẩn đoán",
     },
     {
-      link: "/client",
+      link: "/clients",
       title: "Danh sách bệnh nhân",
     },
     {
