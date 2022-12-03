@@ -15,7 +15,7 @@ import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
 
 function Header() {
-  const user = useSelector((state) => state.auth.login?.currentUser);
+  const user = useSelector((state) => state.auth.login?.currentUser.user);
   const [visible, setVisible] = useState(false);
   const hide = () => setVisible(false);
   const onVisible = () => setVisible(!visible);

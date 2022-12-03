@@ -2,14 +2,19 @@ import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Layout } from "antd";
 import { useLocation } from "react-router-dom";
+import LogoutModal from "../MenuItem/Logout/Logout";
+import { useState } from "react";
+import { logOut } from "../../utils/apiRequest";
 
 import classNames from "classnames/bind";
 import styles from "./LayoutDefault.module.scss";
+import { Button } from "react-bootstrap";
 const cx = classNames.bind(styles);
 const { Header, Content, Sider } = Layout;
 
 function LayoutDefault({ children }) {
   const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const menuItem = [
     {
       link: "/profile",
@@ -27,9 +32,20 @@ function LayoutDefault({ children }) {
       link: "/account",
       title: "Tài khoản",
     },
-    
   ];
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+    logOut()
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div style={{ display: "flex", height: "100%" }} className={cx("layout")}>
       <Sidebar>
@@ -43,8 +59,16 @@ function LayoutDefault({ children }) {
               {menu.title}
             </MenuItem>
           ))}
+          <MenuItem onClick={showModal}>
+            Đăng xuất
+          </MenuItem>
         </Menu>
       </Sidebar>
+      <LogoutModal
+        isModalOpen={isModalOpen}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+      />
       <Layout style={{ padding: "0 24px 24px" }}>
         <Breadcrumb style={{ margin: "16px 0" }}>
           <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>

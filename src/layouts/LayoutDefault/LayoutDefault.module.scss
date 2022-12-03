@@ -1,3 +1,10 @@
 .layout{
     min-height: 800px;
 }
+.item-logout{
+    display: flex;
+    flex-direction: column;
+}
+.item-logout__text{
+    display: flex;
+}
