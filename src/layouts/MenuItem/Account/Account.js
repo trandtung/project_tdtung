@@ -20,23 +20,32 @@ import Password from "antd/es/input/Password";
 
 function Account() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [componentDisabled, setComponentDisabled] = useState(true);
   const { currentUser } = useSelector((state) => ({
     currentUser: state.auth?.login?.currentUser.user,
   }));
-  const [componentDisabled, setComponentDisabled] = useState(true);
+
   const onFormLayoutChange = ({ disabled }) => {
     setComponentDisabled(disabled);
   };
   console.log(currentUser);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const handleEditAccount = (values) => {
+    console.log(values);
+  };
+
   return (
     <>
       <Card>
@@ -53,11 +62,12 @@ function Account() {
           onValuesChange={onFormLayoutChange}
           disabled={componentDisabled}
           initialValues={currentUser}
+          onFinish={handleEditAccount}
         >
           <Form.Item label="Tên người dùng" name="username">
             <Input />
           </Form.Item>
-          <Form.Item label="Giới tính">
+          <Form.Item label="Giới tính" name="gender">
             <Radio.Group>
               <Radio value="Nam"> Nam </Radio>
               <Radio value="Nữ"> Nữ </Radio>
@@ -70,12 +80,14 @@ function Account() {
           <Form.Item label="Số điện thoại" name="phoneNumber">
             <Input />
           </Form.Item>
-          <Form.Item label="Ngày sinh">
+          <Form.Item label="Ngày sinh" name="dateOfBirth">
             <DatePicker />
           </Form.Item>
 
           <Form.Item label="Lưu">
-            <Button type="primary">Thay đổi</Button>
+            <Button type="primary" htmlType="submit">
+              Thay đổi
+            </Button>
           </Form.Item>
         </Form>
 

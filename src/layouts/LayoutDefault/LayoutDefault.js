@@ -1,4 +1,4 @@
-import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Layout } from "antd";
 import { useLocation } from "react-router-dom";
@@ -8,7 +8,6 @@ import { logOut } from "../../utils/apiRequest";
 
 import classNames from "classnames/bind";
 import styles from "./LayoutDefault.module.scss";
-import { Button } from "react-bootstrap";
 const cx = classNames.bind(styles);
 const { Header, Content, Sider } = Layout;
 
@@ -17,7 +16,7 @@ function LayoutDefault({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const menuItem = [
     {
-      link: "/profile",
+      link: "/home",
       title: "Trang chủ",
     },
     {
@@ -40,7 +39,7 @@ function LayoutDefault({ children }) {
 
   const handleOk = () => {
     setIsModalOpen(false);
-    logOut()
+    logOut();
   };
 
   const handleCancel = () => {
@@ -59,9 +58,7 @@ function LayoutDefault({ children }) {
               {menu.title}
             </MenuItem>
           ))}
-          <MenuItem onClick={showModal}>
-            Đăng xuất
-          </MenuItem>
+          <MenuItem onClick={showModal}>Đăng xuất</MenuItem>
         </Menu>
       </Sidebar>
       <LogoutModal
@@ -85,10 +82,7 @@ function LayoutDefault({ children }) {
         >
           {children}
         </Content>
-      </Layout>
-      {/* <main>
-        <button onClick={() => collapseSidebar()}>Collapse</button>
-      </main> */}
+      </Layout> 
     </div>
   );
 }

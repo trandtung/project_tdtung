@@ -1,0 +1,36 @@
+p{
+    margin: 0px;
+}
+.info_statistical{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.info_statistical_item{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100px;
+    background-color: #1677ff;
+    color: #fff;
+    font-size: large;
+    &--number{
+        font-size: 30px;
+        margin: 0;
+    }
+}
+.info_statistical_feedBack{
+    // width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+}
+.info_statistical_history{
+    width: 40%;
+    height: 400px;
+    // background-color: #1677ff;
+    overflow: auto;
+}
