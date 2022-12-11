@@ -6,6 +6,8 @@ import {
   loginApi,
   updatePasswordApi,
   registerUser,
+  changeInfomationUserApi,
+  getUserApi,
 } from "../../utils/fetchApi";
 
 const authSlice = createSlice({
@@ -47,6 +49,11 @@ const authSlice = createSlice({
 
       .addCase(register.rejected, (state, action) => {
         state.errorRegister = action.payload;
+      })
+
+      .addCase(getUser.fulfilled, (state, action) => {
+        // console.log(action.payload)
+        state.login.currentUser.user = action.payload;
       });
   },
 });
@@ -87,6 +94,37 @@ export const register = createAsyncThunk(
     try {
       const response = await registerUser(user);
       if (response.status === STATUSCODES.SUCCESS_ADD) {
+        return response.data;
+      }
+      return rejectWithValue(response.data.error.message);
+    } catch (error) {
+      return rejectWithValue(error.data.error.message);
+    }
+  }
+);
+
+export const changeInfomationUser = createAsyncThunk(
+  "user/updateUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await changeInfomationUserApi(data);
+      if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
+        return response.data;
+      }
+      return rejectWithValue(response.data.error.message);
+    } catch (error) {
+      return rejectWithValue(error.data.error.message);
+    }
+  }
+);
+
+export const getUser = createAsyncThunk(
+  "user/getUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await getUserApi(data.id);
+      console.log(response);
+      if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
         return response.data;
       }
       return rejectWithValue(response.data.error.message);

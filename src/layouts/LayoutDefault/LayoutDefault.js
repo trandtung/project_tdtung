@@ -28,6 +28,10 @@ function LayoutDefault({ children }) {
       title: "Danh sách bệnh nhân",
     },
     {
+      link: "/test",
+      title: "Thử nghiệm",
+    },
+    {
       link: "/account",
       title: "Tài khoản",
     },

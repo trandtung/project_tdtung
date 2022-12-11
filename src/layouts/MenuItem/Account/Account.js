@@ -17,18 +17,20 @@ import {
 } from "antd";
 import { useSelector } from "react-redux";
 import Password from "antd/es/input/Password";
+import { useDispatch } from "react-redux";
+import { changeInfomationUser, getUser } from "../../../stores/slice/authSlice";
+import { useEffect } from "react";
 
 function Account() {
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState(true);
   const { currentUser } = useSelector((state) => ({
     currentUser: state.auth?.login?.currentUser.user,
   }));
-
   const onFormLayoutChange = ({ disabled }) => {
     setComponentDisabled(disabled);
   };
-  console.log(currentUser);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -42,8 +44,14 @@ function Account() {
     setIsModalOpen(false);
   };
 
-  const handleEditAccount = (values) => {
-    console.log(values);
+  const handleEditAccount = async(values) => {
+    const response = await dispatch(
+      changeInfomationUser({ data: values, id: currentUser._id })
+    );
+    console.log(response);
+    if (changeInfomationUser.fulfilled.match(response)) {
+      dispatch(getUser({id:currentUser._id}));
+    }
   };
 
   return (

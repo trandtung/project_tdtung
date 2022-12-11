@@ -4,6 +4,7 @@ import Predict from "../layouts/MenuItem/Predict/Predict";
 import ClientTable from "../layouts/MenuItem/ClientTable/ClientTable";
 import Account from "../layouts/MenuItem/Account/Account";
 import { Route, Routes } from "react-router-dom";
+import TestScreen from "../layouts/MenuItem/Test/TestScreen";
 
 function AuthorizedRoutes({ isAuthenticated = true }) {
   return (
@@ -14,6 +15,7 @@ function AuthorizedRoutes({ isAuthenticated = true }) {
         <Route path="/clients" element={<ClientTable />} />
         <Route path="/clients/:id" element={<ClientTable />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/test" element={<TestScreen/>} />
         {/* <Route path="*" element={<div>error</div>} /> */}
       </Route>
       {/* <Route path="*" element={<div>error</div>} /> */}

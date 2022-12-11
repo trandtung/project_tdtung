@@ -10,6 +10,8 @@ export const loginApi = async (user) => {
 };
 // api mới
 
+// edit user
+
 // client
 export const saveClientPredictApi = async (data) => {
   return await ApiClient.post(`/client/add`, data)
@@ -37,6 +39,22 @@ export const getClientDetailApi = async (id) => {
 
 export const deleteClientApi = async (id) => {
   return await ApiClient.delete(`/client/delete/${id}`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const changeInfomationUserApi = async (data) => {
+  return await ApiClient.patch(`user/${data.id}/edit`,data.data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const getUserApi = async (id) => {
+  return await ApiClient.get(`user/${id}`)
     .then((response) => response)
     .catch((error) => {
       return error.response;
@@ -97,18 +115,18 @@ export const addTaskApi = async (task) => {
     });
 };
 
-export const removeTaskApi = async (idtask) => {
-  return await ApiClient.delete(`/api/tasks/${idtask}`)
-    .then((response) => response)
-    .catch((error) => {
-      return error;
-    });
-};
+// export const removeTaskApi = async (idtask) => {
+//   return await ApiClient.delete(`/api/tasks/${idtask}`)
+//     .then((response) => response)
+//     .catch((error) => {
+//       return error;
+//     });
+// };
 
-export const updateTaskApi = async (data) => {
-  return await ApiClient.patch(`/api/tasks/${data.id}`, data.datatask)
-    .then((response) => response)
-    .catch((error) => {
-      return error;
-    });
-};
+// export const updateTaskApi = async (data) => {
+//   return await ApiClient.patch(`/api/tasks/${data.id}`, data.datatask)
+//     .then((response) => response)
+//     .catch((error) => {
+//       return error;
+//     });
+// };
