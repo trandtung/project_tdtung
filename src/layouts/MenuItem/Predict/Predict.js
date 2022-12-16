@@ -1,12 +1,26 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import FormClientInfo from "./components/FormClientInfo";
-import { Form, Button, Upload, Modal, Image, Card, Checkbox } from "antd";
+import {
+  Form,
+  Button,
+  Upload,
+  Modal,
+  Image,
+  Card,
+  Checkbox,
+  Col,
+  Row,
+} from "antd";
 import axios from "axios";
 import FormData from "form-data";
 import { baseApiPredict } from "../../../request/apiPredict";
+import DrawImage from "../../DrawImage/DrawImage";
 
-import { saveClientInfo } from "../../../stores/slice/predictImgSlice";
+import {
+  saveClientInfo,
+  saveManyImage,
+} from "../../../stores/slice/predictImgSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../component/Loading/Loading";
 
@@ -24,7 +38,7 @@ const FormDisabledDemo = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [valuesFormClientInfo, setValuesFormClientInfo] = useState();
-
+  const [modalFeedBack, setModalFeedBack] = useState(false);
   const handlePredict = async (values) => {
     setValuesFormClientInfo(values);
     let formData = new FormData();
@@ -74,7 +88,8 @@ const FormDisabledDemo = () => {
   };
 
   const saveClient = async (values) => {
-    values.dataImage = listImgPredicted;
+    const responseSaveImg = await dispatch(saveManyImage(listImgPredicted));
+    values.dataImage = responseSaveImg.payload.data;
     const response = await dispatch(saveClientInfo(values));
     if (saveClientInfo.fulfilled.match(response)) {
       setStatePredict(false);
@@ -83,6 +98,13 @@ const FormDisabledDemo = () => {
     }
   };
 
+  // const showModalF = () => {
+  //   setModalFeedBack(true);
+  // };
+  const handleFeedBackImg = (data) => {
+    console.log(data);
+    setModalFeedBack(true);
+  };
   return (
     <>
       {!statePredict ? (
@@ -144,26 +166,39 @@ const FormDisabledDemo = () => {
           >
             <FormClientInfo />
 
-            {listImgPredicted &&
-              listImgPredicted.map((item, index) => (
-                <Card
-                  key={item.img}
-                  title="Card title"
-                  bordered={false}
-                  style={{ display: "flex" }}
-                >
-                  <Image
-                    src={`${baseApiPredict}${item.img}`}
-                    width={500}
-                    height={600}
-                  />
-                  <div>
-                    <p>Card content</p>
-                    <p>Card content</p>
-                    <p>Card content</p>
-                  </div>
-                </Card>
-              ))}
+            <Row gutter={[16, 24]}>
+              {listImgPredicted &&
+                listImgPredicted.map((item, index) => (
+                  <Col span={12} key={index}>
+                    <Card
+                      key={item.img}
+                      // title="Card title"
+                      bordered={false}
+                      style={{ display: "flex" }}
+                    >
+                      <Image
+                        src={`${baseApiPredict}${item.originImg}`}
+                        width={500}
+                        height={600}
+                      />
+                      <div>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                        <p>Card content</p>
+                      </div>
+                      <Button
+                        disabled={false}
+                        type={"primary"}
+                        onClick={() => {
+                          handleFeedBackImg(item);
+                        }}
+                      >
+                        Phản hồi
+                      </Button>
+                    </Card>
+                  </Col>
+                ))}
+            </Row>
 
             <Button type="primary" htmlType="submit" disabled={false}>
               Lưu thông tin
@@ -180,6 +215,24 @@ const FormDisabledDemo = () => {
           >
             Kết nối mới
           </Button>
+
+          <Modal
+            title="Phản hồi ảnh"
+            open={modalFeedBack}
+            // onOk={handleOk}
+            onCancel={() => {
+              setModalFeedBack(false);
+            }}
+             width={550}
+          >
+            {/* <Image
+                preview={false}
+                src={`${baseApiPredict}${listImgPredicted[0].originImg}`}
+                width={500}
+                height={600}
+              ></Image> */}
+            <DrawImage />
+          </Modal>
         </>
       )}
     </>

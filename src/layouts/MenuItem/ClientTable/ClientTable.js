@@ -14,7 +14,7 @@ import ModalImageDetail from "./component/ModalImageDetail";
 import {
   getClients,
   getClientDetail,
-  deleteClient
+  deleteClient,
 } from "../../../stores/slice/tableClientSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,12 +33,12 @@ function ClientTable() {
     dispatch(getClients());
   }, []);
 
-  const viewImageClient = async (id) => {
-    // console.log(id)
-    await dispatch(getClientDetail(id));
-    navigate(`/clients/${id}`);
+  const viewImageClient = async (data) => {
+    await dispatch(getClientDetail(data.key));
+    navigate(`/clients/${data.key}`);
   };
 
+  const [idClient, setIdClient] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [currentIdClient, setCurrentIdClient] = useState(null);
@@ -51,14 +51,14 @@ function ClientTable() {
   };
 
   const handleCancel = () => {
+    navigate(`/clients`);
     setIsModalOpen(false);
     setConfirmDelete(false);
   };
 
-  const handleDeleteClient = async() => {
-    const response= await dispatch(deleteClient(currentIdClient))
-    console.log(response)
-    if(deleteClient.fulfilled.match(response)){
+  const handleDeleteClient = async () => {
+    const response = await dispatch(deleteClient(currentIdClient));
+    if (deleteClient.fulfilled.match(response)) {
       setConfirmDelete(false);
       dispatch(getClients());
     }
@@ -99,8 +99,9 @@ function ClientTable() {
           <Button
             type="primary"
             onClick={() => {
-              viewImageClient(record.key);
+              viewImageClient(record);
               setIsModalOpen(true);
+              setIdClient(record);
             }}
           >
             Chi tiết ảnh
@@ -118,7 +119,7 @@ function ClientTable() {
             danger
             onClick={() => {
               // console.log(record);
-              setCurrentIdClient(record.key)
+              setCurrentIdClient(record.key);
               setConfirmDelete(true);
             }}
           >
@@ -138,6 +139,7 @@ function ClientTable() {
         address: item.address,
         gender: item.gender,
         numberImg: item.dataImage.length,
+        dataImage: item.dataImage,
       };
     }),
     [listClient]
@@ -155,6 +157,7 @@ function ClientTable() {
         handleOk={handleOk}
         handleCancel={handleCancel}
         width={1000}
+        idClient={idClient}
       />
 
       {/* modal delete client */}

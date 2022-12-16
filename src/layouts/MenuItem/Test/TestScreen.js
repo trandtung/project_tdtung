@@ -16,6 +16,7 @@ const cx = classNames.bind(styles);
 
 function TestScreen() {
   const [dataTable, setDataTable] = useState([]);
+  const [indexMatric, setIndexMatric] = useState();
   const listImage = useRef();
   const dataMatric = useRef({ abnormal: {}, normal: {} });
   const handleDirectory = async (e) => {
@@ -65,24 +66,41 @@ function TestScreen() {
     });
     setDataTable([
       {
-        name: "Abnormal",
+        name: "Chuẩn đoán có bệnh",
         key: "1",
         Abnormal: dataMatric?.current?.abnormal?.abnormal,
-        Normal: dataMatric?.current?.abnormal?.normal,
+        Normal: dataMatric?.current?.normal?.abnormal,
       },
       {
-        name: "Normal",
+        name: "Chuẩn đoán không bệnh",
         key: "2",
-        Abnormal: dataMatric.current.normal.abnormal,
+        Abnormal: dataMatric?.current?.abnormal?.normal,
         Normal: dataMatric.current.normal.normal,
       },
     ]);
   };
 
-  // useEffect(() => {
-  //   console.log('tung')
-  // }, [dataMatric]);
-  // console.log(dataTable)
+  useEffect(() => {
+    setIndexMatric({
+      accuracy:
+        (dataMatric?.current?.abnormal?.abnormal +
+          dataMatric.current.normal.normal) /
+        (dataMatric?.current?.abnormal?.abnormal +
+          dataMatric?.current?.normal?.abnormal +
+          dataMatric?.current?.abnormal?.normal +
+          dataMatric.current.normal.normal),
+      sens:
+        dataMatric?.current?.abnormal?.abnormal /
+        (dataMatric?.current?.abnormal?.abnormal +
+          dataMatric?.current?.abnormal?.normal),
+      spec:
+        dataMatric.current.normal.normal /
+        (dataMatric.current.normal.normal +
+          dataMatric?.current?.normal?.abnormal),
+    });
+  }, [dataTable]);
+
+  console.log(indexMatric);
   return (
     <div className={cx("wraper")}>
       <Row gutter={16}>
@@ -106,20 +124,40 @@ function TestScreen() {
               <Table.Column key="name" title="" dataIndex="name"></Table.Column>
               <Table.Column
                 key="Abnormal"
-                title="Abnormal"
+                title="Bệnh"
                 dataIndex="Abnormal"
               ></Table.Column>
               <Table.Column
                 key="Normal"
-                title="Normal"
+                title="Không bệnh"
                 dataIndex="Normal"
               ></Table.Column>
             </Table>
-            <h4>
-              <FontAwesomeIcon icon={faCircleCheck} />
-              <span>&nbsp; &nbsp;</span>
-              test
-            </h4>
+            {indexMatric?.accuracy && (
+              <>
+                <h4>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  <span>&nbsp; &nbsp;</span>
+                  Độ chính xác : {(indexMatric.accuracy * 100).toFixed(2)} %
+                </h4>
+
+                <h4>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  <span>&nbsp; &nbsp;</span>
+                  Độ nhạy : {(indexMatric.sens * 100).toFixed(2)}%
+                </h4>
+                <h4>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  <span>&nbsp; &nbsp;</span>
+                  Độ đặc hiệu : {(indexMatric.spec * 100).toFixed(2)}%
+                </h4>
+                <h4>
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  <span>&nbsp; &nbsp;</span>
+                  F1 :%
+                </h4>
+              </>
+            )}
           </Card>
         </Col>
       </Row>

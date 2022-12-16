@@ -21,6 +21,22 @@ export const saveClientPredictApi = async (data) => {
     });
 };
 
+export const saveManyImageApi = async (data) => {
+  return await ApiClient.post(`/image`, data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const getListImageApi = async (data) => {
+  return await ApiClient.post(`/image/list`, data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
 export const getClientsApi = async () => {
   return await ApiClient.get(`/client`)
     .then((response) => response)
