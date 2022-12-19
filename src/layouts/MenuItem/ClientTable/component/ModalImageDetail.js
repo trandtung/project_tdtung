@@ -1,9 +1,11 @@
-import { Button, Modal, Card, Image } from "antd";
+import { Button, Modal, Card, Image, Col, Row } from "antd";
 import { Children, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { baseApiPredict } from "../../../../request/apiPredict";
 import { getListImage } from "../../../../stores/slice/predictImgSlice";
+import RespondedImage from "./RespondedImage";
+
 function ModalImageDetail({
   isModalOpen,
   handleOk,
@@ -18,15 +20,14 @@ function ModalImageDetail({
   const { detailClient, loading, listImage } = useSelector((state) => ({
     detailClient: state?.tableClientSlice?.clientDetail,
     loading: state.tableClientSlice?.isLoading,
-    listImage:state?.predictImgSlice?.listImage
+    listImage: state?.predictImgSlice?.listImage,
   }));
 
   useEffect(() => {
     dispatch(getListImage(idClient?.dataImage));
   }, [idClient]);
 
-  
-  // console.log(listImage)
+  console.log(listImage);
   return (
     <>
       {detailClient?.dataImage && (
@@ -37,15 +38,36 @@ function ModalImageDetail({
           onCancel={handleCancel}
           {...props}
         >
-          {listImage && listImage?.map((itemImg, index) => (
-            <Card key={index}>
-              <Image
-                src={`${baseApiPredict}${itemImg.originImg}`}
-                width={500}
-                height={600}
-              />
-            </Card>
-          ))}
+          {listImage &&
+            listImage?.map((itemImg, index) => (
+              <Row gutter={[16, 24]} key={index}>
+                <Col span={12}>
+                  <Card>
+                    <Image
+                      src={`${baseApiPredict}${itemImg.originImg}`}
+                      width={500}
+                      height={600}
+                    />
+                  </Card>
+                </Col>
+                <Col span={12}>
+                  <Card>
+                    {itemImg.previewImg && (
+                      <>
+                        <Image
+                          src={`${baseApiPredict}static/preview${itemImg.previewImg}`}
+                          width={500}
+                          height={600}
+                        />
+                        <RespondedImage
+                          annotationsToDraw={itemImg.feedBackImg}
+                        />
+                      </>
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+            ))}
         </Modal>
       )}
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import FormClientInfo from "./components/FormClientInfo";
 import {
@@ -39,6 +39,9 @@ const FormDisabledDemo = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [valuesFormClientInfo, setValuesFormClientInfo] = useState();
   const [modalFeedBack, setModalFeedBack] = useState(false);
+  const [pathPreviewImg, setPathpreviewImg] = useState();
+  const [currentIdFbImg, setCurrentIdFbImg] = useState();
+
   const handlePredict = async (values) => {
     setValuesFormClientInfo(values);
     let formData = new FormData();
@@ -101,10 +104,32 @@ const FormDisabledDemo = () => {
   // const showModalF = () => {
   //   setModalFeedBack(true);
   // };
-  const handleFeedBackImg = (data) => {
-    console.log(data);
+  const handleFeedBackImg = (data, index) => {
+    setCurrentIdFbImg(index);
+    const pathImg = data.originImg.slice(6);
+    setPathpreviewImg(pathImg);
     setModalFeedBack(true);
   };
+
+  const removeBbox = () => {
+    setModalFeedBack(false);
+  };
+
+  const currentListBbox = useRef();
+  const listBoundingBox = (data) => {
+    currentListBbox.current = { data };
+  };
+
+  const handleSaveBboxFb = () => {
+    setListImgPredicted(
+      [...listImgPredicted],
+      (listImgPredicted[currentIdFbImg].feedBackImg = currentListBbox.current),
+      (listImgPredicted[currentIdFbImg].previewImg = pathPreviewImg)
+    );
+    setModalFeedBack(false);
+  };
+  // console.log(listImgPredicted);
+
   return (
     <>
       {!statePredict ? (
@@ -190,7 +215,7 @@ const FormDisabledDemo = () => {
                         disabled={false}
                         type={"primary"}
                         onClick={() => {
-                          handleFeedBackImg(item);
+                          handleFeedBackImg(item, index);
                         }}
                       >
                         Phản hồi
@@ -219,19 +244,21 @@ const FormDisabledDemo = () => {
           <Modal
             title="Phản hồi ảnh"
             open={modalFeedBack}
-            // onOk={handleOk}
-            onCancel={() => {
-              setModalFeedBack(false);
-            }}
-             width={550}
+            onOk={handleSaveBboxFb}
+            onCancel={removeBbox}
+            width={550}
           >
-            {/* <Image
-                preview={false}
-                src={`${baseApiPredict}${listImgPredicted[0].originImg}`}
-                width={500}
-                height={600}
-              ></Image> */}
-            <DrawImage />
+            <Image
+              preview={false}
+              src={`${baseApiPredict}static/preview${pathPreviewImg}`}
+              width={500}
+              height={600}
+              // style={{ position: "absolute", left: "0", top: "0", z-index: "0" }}
+            />
+            <DrawImage
+              modalFeedBack={modalFeedBack}
+              listBoundingBox={listBoundingBox}
+            />
           </Modal>
         </>
       )}

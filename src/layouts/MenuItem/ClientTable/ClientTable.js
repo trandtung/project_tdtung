@@ -156,7 +156,7 @@ function ClientTable() {
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
-        width={1000}
+        width={1200}
         idClient={idClient}
       />
 
