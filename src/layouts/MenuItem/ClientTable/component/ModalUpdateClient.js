@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getClientDetail,
+  getClients,
   updateClient,
 } from "../../../../stores/slice/tableClientSlice";
 import FormClientInfo from "../../Predict/components/FormClientInfo";
@@ -38,6 +39,7 @@ function ModalUpdateClient({ isModalOpen, handleCancel }) {
       updateClient({ id: dataClientDetail._id, data: data })
     );
     if (updateClient.fulfilled.match(res)) {
+      dispatch(getClients())
       alert("Success");
       handleCancel();
     }
