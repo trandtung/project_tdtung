@@ -5,7 +5,7 @@ export const loginUser = async (user, dispatch, navigate) => {
   if (signin.fulfilled.match(response)) {
     // console.log(response)
     localStorage.setItem('accessToken', response.payload.accessToken);
-    navigate("/");
+    navigate("/home");
   }
 };
 

@@ -1,10 +1,11 @@
-import { Button, Modal, Card, Image, Col, Row } from "antd";
+import { Button, Modal, Card, Image, Col, Row, Form } from "antd";
 import { Children, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { baseApiPredict } from "../../../../request/apiPredict";
 import { getListImage } from "../../../../stores/slice/predictImgSlice";
 import RespondedImage from "./RespondedImage";
+import FormClientInfo from "../../Predict/components/FormClientInfo";
 
 function ModalImageDetail({
   isModalOpen,
@@ -27,7 +28,7 @@ function ModalImageDetail({
     dispatch(getListImage(idClient?.dataImage));
   }, [idClient]);
 
-  console.log(listImage);
+  // console.log(listImage);
   return (
     <>
       {detailClient?.dataImage && (

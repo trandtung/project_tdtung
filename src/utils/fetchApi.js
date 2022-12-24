@@ -62,7 +62,7 @@ export const deleteClientApi = async (id) => {
 };
 
 export const changeInfomationUserApi = async (data) => {
-  return await ApiClient.patch(`user/${data.id}/edit`,data.data)
+  return await ApiClient.patch(`user/${data.id}/edit`, data.data)
     .then((response) => response)
     .catch((error) => {
       return error.response;
@@ -77,7 +77,53 @@ export const getUserApi = async (id) => {
     });
 };
 
+export const addFeedBackApi = async (data) => {
+  return await ApiClient.post(`/historyFb/add`, data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
 
+export const getFeedBackApi = async () => {
+  return await ApiClient.get(`/historyFb/limit`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const getNumberClientDayApi = async (date) => {
+  return await ApiClient.post(`client/countclient/day`, { date: date })
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const getTotalClientApi = async () => {
+  return await ApiClient.get(`client/total`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const updateClientApi = async (data) => {
+  return await ApiClient.patch(`client/${data.id}/edit`, data.data)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
+
+export const getTotalImgApi = async () => {
+  return await ApiClient.get(`image/total`)
+    .then((response) => response)
+    .catch((error) => {
+      return error.response;
+    });
+};
 
 // api cũ
 export const updatePasswordApi = async (user) => {

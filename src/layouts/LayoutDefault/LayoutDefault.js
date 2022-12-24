@@ -71,11 +71,11 @@ function LayoutDefault({ children }) {
         handleCancel={handleCancel}
       />
       <Layout style={{ padding: "0 24px 24px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+        {/* <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item link>Trang chủ</Breadcrumb.Item>
           <Breadcrumb.Item>CHuân</Breadcrumb.Item>
           <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb> */}
         <Content
           className="site-layout-background"
           style={{

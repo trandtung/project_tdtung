@@ -20,13 +20,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
+import moment from "moment/moment";
+import ModalUpdateClient from "./component/ModalUpdateClient";
 
 function ClientTable() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const { listClient, loading } = useSelector((state) => ({
+  const { listClient, loading, clientDetail } = useSelector((state) => ({
     listClient: state.tableClientSlice?.listClient,
     loading: state.tableClientSlice.isLoading,
+    clientDetail: state.tableClientSlice?.clientDetail,
   }));
 
   useEffect(() => {
@@ -38,8 +41,18 @@ function ClientTable() {
     navigate(`/clients/${data.key}`);
   };
 
+  const updateClient = async (data) => {
+    const res = await dispatch(getClientDetail(data.key));
+    if (getClientDetail.fulfilled.match(res)) {
+      // alert("sc")
+      setIsModalUpdateClient(true);
+      navigate(`/clients/${data.key}`);
+    }
+  };
+
   const [idClient, setIdClient] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalUpdateClient, setIsModalUpdateClient] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [currentIdClient, setCurrentIdClient] = useState(null);
   const showModal = () => {
@@ -54,6 +67,7 @@ function ClientTable() {
     navigate(`/clients`);
     setIsModalOpen(false);
     setConfirmDelete(false);
+    setIsModalUpdateClient(false);
   };
 
   const handleDeleteClient = async () => {
@@ -91,6 +105,11 @@ function ClientTable() {
       key: "numberImg",
     },
     {
+      title: "Ngày chẩn đoán",
+      dataIndex: "createdAt",
+      key: "createdAt",
+    },
+    {
       title: "Ảnh",
       key: "tags",
       dataIndex: "tags",
@@ -114,7 +133,15 @@ function ClientTable() {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button>Sửa</Button>
+          <Button
+            onClick={() => {
+              updateClient(record);
+              setIdClient(record);
+              // setIdClient(record);
+            }}
+          >
+            Sửa
+          </Button>
           <Button
             danger
             onClick={() => {
@@ -139,6 +166,7 @@ function ClientTable() {
         address: item.address,
         gender: item.gender,
         numberImg: item.dataImage.length,
+        createdAt: moment(item.createdAt).format("L LT"),
         dataImage: item.dataImage,
       };
     }),
@@ -158,6 +186,13 @@ function ClientTable() {
         handleCancel={handleCancel}
         width={1200}
         idClient={idClient}
+      />
+
+      <ModalUpdateClient
+        isModalOpen={isModalUpdateClient}
+        // handleOk={handleOk}
+        handleCancel={handleCancel}
+        // idClient={idClient}
       />
 
       {/* modal delete client */}

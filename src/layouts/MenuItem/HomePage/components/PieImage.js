@@ -1,42 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Pie } from '@ant-design/plots';
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import { Column } from "@ant-design/plots";
 
-const PieImage = () => {
-    const data = [
-      {
-        type: '分类一',
-        value: 5,
+import { useDispatch } from "react-redux";
+import moment from "moment/moment";
+import { getNumberClientDay } from "../../../../stores/slice/homeSlice";
+import { useRef } from "react";
+
+const DemoColumn = () => {
+  const dispatch = useDispatch();
+  const dataColumn = useRef([]);
+  const data = [];
+  // console.log(dataColumn.current)
+  // useEffect(() => {
+  //   data = dataColumn.current;
+  // }, [dataColumn]);
+  const config = {
+    data:dataColumn.current,
+    xField: "type",
+    yField: "number",
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: "middle",
+      // 'top', 'bottom', 'middle',
+      // 配置样式
+      style: {
+        fill: "#FFFFFF",
+        opacity: 0.6,
       },
-      {
-        type: '分类二',
-        value: 5,
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
       },
-      {
-        type: '分类三',
-        value: 0,
+    },
+    meta: {
+      type: {
+        alias: "类别",
       },
-    ];
-    const config = {
-      appendPadding: 10,
-      data,
-      angleField: 'value',
-      colorField: 'type',
-      radius: 0.8,
-    //   label: {
-    //     type: 'outer',
-    //     content: '{name} {percentage}',
-    //   },
-    //   interactions: [
-    //     {
-    //       type: 'pie-legend-active',
-    //     },
-    //     {
-    //       type: 'element-active',
-    //     },
-    //   ],
-    };
-    return <Pie {...config} />;
+      sales: {
+        alias: "销售额",
+      },
+    },
   };
 
-  export default PieImage;
+  useEffect(() => {
+    fetchDataColumn();
+  }, []);
+  const fetchDataColumn = async () => {
+    for (let i = 1; i <= 7; i++) {
+      const response = await dispatch(
+        getNumberClientDay(moment().day(i).format("YYYY-MM-DD"))
+      );
+      if (getNumberClientDay.fulfilled.match(response)) {
+        // console.log(response);
+        // data=[...data,response.payload.data]
+        dataColumn.current = [...dataColumn.current, response.payload.data];
+        // data.push(response.payload.data);
+      }
+    }
+  };
+  // console.log(dataColumn.current);
+  return <Column {...config} />;
+};
+export default DemoColumn;

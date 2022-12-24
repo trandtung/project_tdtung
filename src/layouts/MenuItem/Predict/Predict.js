@@ -18,6 +18,7 @@ import { baseApiPredict } from "../../../request/apiPredict";
 import DrawImage from "../../DrawImage/DrawImage";
 
 import {
+  addFeedback,
   saveClientInfo,
   saveManyImage,
 } from "../../../stores/slice/predictImgSlice";
@@ -95,6 +96,17 @@ const FormDisabledDemo = () => {
     values.dataImage = responseSaveImg.payload.data;
     const response = await dispatch(saveClientInfo(values));
     if (saveClientInfo.fulfilled.match(response)) {
+      const hasFeedBack = listImgPredicted.some((item, index) => {
+        return item.feedBackImg?.data.length > 0;
+      });
+      hasFeedBack &&
+        (await dispatch(
+          addFeedback({
+            name: response.payload.data.name,
+            id_client: response.payload.data._id,
+          })
+        ));
+      alert("sc");
       setStatePredict(false);
       setSelectedFile();
       setListImgPredicted([]);

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCategoriesApi, getListImageApi } from "../../utils/fetchApi";
+import { addFeedBackApi, getCategoriesApi, getListImageApi } from "../../utils/fetchApi";
 import { saveClientPredictApi,saveManyImageApi } from "../../utils/fetchApi";
 import { STATUSCODES } from "../constans";
 
@@ -59,7 +59,7 @@ export const saveManyImage = createAsyncThunk(
   "predict/saveManyImage",
   async (data, { rejectWithValue }) => {
     try {
-      console.log(data)
+      // console.log(data)
       const response = await saveManyImageApi(data);
       // console.log(response)
       if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
@@ -79,6 +79,21 @@ export const getListImage = createAsyncThunk(
       // console.log(data)
       const response = await getListImageApi(data);
       // console.log(response)
+      if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
+        return response;
+      }
+      return rejectWithValue(response);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const addFeedback = createAsyncThunk(
+  "predict/getListImage",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await addFeedBackApi(data);
       if (response.status === STATUSCODES.SUCCESS_GET_UPDATE) {
         return response;
       }

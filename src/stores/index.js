@@ -10,7 +10,7 @@ import authSlice from "./slice/authSlice";
 // import filterSlice from "./slice/searchSlice";
 import predictImgSlice from "./slice/predictImgSlice";
 import tableClientSlice from "./slice/tableClientSlice";
-
+import homeslice from "./slice/homeSlice";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 
@@ -27,6 +27,7 @@ const reducer = combineReducers({
   // filterSlice: filterSlice.reducer,
   predictImgSlice: predictImgSlice.reducer,
   tableClientSlice: tableClientSlice.reducer,
+  homeslice:homeslice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

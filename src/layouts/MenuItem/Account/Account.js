@@ -48,9 +48,10 @@ function Account() {
     const response = await dispatch(
       changeInfomationUser({ data: values, id: currentUser._id })
     );
-    console.log(response);
+    // console.log(response);
     if (changeInfomationUser.fulfilled.match(response)) {
       dispatch(getUser({id:currentUser._id}));
+      alert("Success")
     }
   };
 

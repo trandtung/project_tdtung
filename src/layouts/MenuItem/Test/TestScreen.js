@@ -100,7 +100,6 @@ function TestScreen() {
     });
   }, [dataTable]);
 
-  console.log(indexMatric);
   return (
     <div className={cx("wraper")}>
       <Row gutter={16}>
