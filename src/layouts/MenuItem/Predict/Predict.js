@@ -140,7 +140,7 @@ const FormDisabledDemo = () => {
     );
     setModalFeedBack(false);
   };
-  // console.log(listImgPredicted);
+  console.log(listImgPredicted);
 
   return (
     <>
@@ -219,9 +219,13 @@ const FormDisabledDemo = () => {
                         height={600}
                       />
                       <div>
-                        <p>Card content</p>
-                        <p>Card content</p>
-                        <p>Card content</p>
+                        <p>
+                          <b>Số vùng bệnh :</b> {item.number}
+                        </p>
+                        <p>
+                          <b>Tên ảnh : </b>
+                          {item.originImg}
+                        </p>
                       </div>
                       <Button
                         disabled={false}

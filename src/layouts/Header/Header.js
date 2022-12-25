@@ -24,7 +24,7 @@ function Header() {
     <div className={cx("wrapper")}>
       <div className={cx("wrap-search")}>
         <div>
-          <Search />
+          {/* <Search /> */}
         </div>
         <Tippy
           interactive

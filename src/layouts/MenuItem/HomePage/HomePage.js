@@ -1,5 +1,7 @@
 import { Space } from "antd";
 import Card from "antd/es/card/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import PieImage from "./components/PieImage";
 import moment from "moment/moment";
 import classNames from "classnames/bind";
@@ -74,9 +76,11 @@ function HomePage() {
                       key={item.id}
                       title="Đã phản hồi ảnh của bệnh nhân:"
                       extra={
-                        <a href="http://localhost:3000/clients/638760223cca754ed651ad4d">
-                          Chi tiết
-                        </a>
+                        <div>
+                          <a href="http://localhost:3000/clients/638760223cca754ed651ad4d">
+                            Chi tiết
+                          </a>
+                        </div>
                       }
                       style={{ marginBottom: "20px" }}
                     >

@@ -23,7 +23,7 @@ function Home() {
   // }, [fetchCategories]);
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className={cx("container")}>
         <LayoutDefault>
           <Outlet />
