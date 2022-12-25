@@ -9,12 +9,32 @@ import { useState, useRef } from "react";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import Loading from "../../../component/Loading/Loading";
 
 import classNames from "classnames/bind";
 import styles from "./TestScreen.module.scss";
 const cx = classNames.bind(styles);
 
 function TestScreen() {
+  // const dataa = [
+  //   {
+  //     name: "Chuẩn đoán có bệnh",
+  //     key: "1",
+  //     Precision: 0,
+  //     Recall: 0,
+  //     F1: 0,
+  //   },
+  //   {
+  //     name: "Chuẩn đoán không bệnh",
+  //     key: "2",
+  //     Precision: 0,
+  //     Recall: 0,
+  //     F1: 0,
+  //   },
+  // ];
+  const [dataMetricTest, setDataMetricTest] = useState();
+
+  const [statusTestModal, setStstusTestModal] = useState(null);
   const [dataTable, setDataTable] = useState([]);
   const [indexMatric, setIndexMatric] = useState();
   const listImage = useRef();
@@ -47,6 +67,7 @@ function TestScreen() {
   };
 
   const handlTest = async () => {
+    setStstusTestModal(false);
     let abnormalData = new FormData();
     let normalData = new FormData();
     const listImg = listImage.current.map((item, index) => {
@@ -64,6 +85,42 @@ function TestScreen() {
       name: "normal",
       listImg: normalData,
     });
+    setStstusTestModal(true);
+
+    const trueAbnormal = dataMatric?.current?.abnormal?.abnormal;
+    const falseAbnormal = dataMatric?.current?.abnormal?.normal;
+
+    const falseNormal = dataMatric?.current?.normal?.abnormal;
+    const trueNormal = dataMatric?.current?.normal?.normal;
+
+    // abnormal
+    const PrecisionTrueAb = (
+      (trueAbnormal / (trueAbnormal + falseAbnormal)) *
+      100
+    ).toFixed(2);
+
+    const RecallTrueAb = (
+      (trueAbnormal / (trueAbnormal + falseNormal)) *
+      100
+    ).toFixed(2);
+
+    //  normal
+    const PrecisionFalseNor = (
+      (trueNormal / (trueNormal + falseNormal)) *
+      100
+    ).toFixed(2);
+
+    const RecallFalseNor = (
+      (trueAbnormal / (trueAbnormal + falseAbnormal)) *
+      100
+    ).toFixed(2);
+
+    const F1FalseNor = Number(
+      (2 * Number(PrecisionFalseNor) * Number(RecallFalseNor)) /
+        (Number(PrecisionFalseNor) + Number(RecallFalseNor))
+    ).toFixed(2);
+
+    // console.log(F1FalseNor);
     setDataTable([
       {
         name: "Chuẩn đoán có bệnh",
@@ -78,9 +135,38 @@ function TestScreen() {
         Normal: dataMatric.current.normal.normal,
       },
     ]);
+
+    setDataMetricTest([
+      {
+        name: "Chuẩn đoán có bệnh",
+        key: "1",
+        Precision: PrecisionTrueAb,
+        Recall: RecallTrueAb,
+        F1: (
+          ((2 *
+            (trueAbnormal / (trueAbnormal + falseAbnormal)) *
+            (trueAbnormal / (trueAbnormal + falseNormal))) /
+            (trueAbnormal / (trueAbnormal + falseAbnormal) +
+              trueAbnormal / (trueAbnormal + falseNormal))) *
+          100
+        ).toFixed(2),
+      },
+      {
+        name: "Chuẩn đoán không bệnh",
+        key: "2",
+        Precision: PrecisionFalseNor,
+        Recall: RecallFalseNor,
+        F1: F1FalseNor,
+      },
+    ]);
   };
 
   useEffect(() => {
+    const trueAbnormal = dataMatric?.current?.abnormal?.abnormal;
+    const falseAbnormal = dataMatric?.current?.abnormal?.normal;
+
+    const trueNormal = dataMatric?.current?.normal?.abnormal;
+    const falseNormal = dataMatric?.current?.normal?.normal;
     setIndexMatric({
       accuracy:
         (dataMatric?.current?.abnormal?.abnormal +
@@ -97,6 +183,7 @@ function TestScreen() {
         dataMatric.current.normal.normal /
         (dataMatric.current.normal.normal +
           dataMatric?.current?.normal?.abnormal),
+      // precision :
     });
   }, [dataTable]);
 
@@ -113,7 +200,11 @@ function TestScreen() {
               <Button icon={<UploadOutlined />}>Upload Directory</Button>
             </Upload>
           </Card>
-          <Button type="primary" onClick={handlTest}>
+          <Button
+            type="primary"
+            onClick={handlTest}
+            disabled={statusTestModal === false}
+          >
             Thử nghiệm
           </Button>
         </Col>
@@ -132,30 +223,66 @@ function TestScreen() {
                 dataIndex="Normal"
               ></Table.Column>
             </Table>
-            {indexMatric?.accuracy && (
-              <>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleCheck} />
-                  <span>&nbsp; &nbsp;</span>
-                  Độ chính xác : {(indexMatric.accuracy * 100).toFixed(2)} %
-                </h4>
+            {statusTestModal == false ? (
+              <Loading />
+            ) : (
+              indexMatric?.accuracy &&
+              statusTestModal && (
+                <>
+                  <Card
+                    title={"Đánh giá mô hình:"}
+                    style={{ marginTop: "30px" }}
+                  >
+                    <h4>
+                      <FontAwesomeIcon icon={faCircleCheck} />
+                      <span>&nbsp; &nbsp;</span>
+                      Độ chính xác : {(indexMatric.accuracy * 100).toFixed(2)} %
+                    </h4>
 
-                <h4>
-                  <FontAwesomeIcon icon={faCircleCheck} />
-                  <span>&nbsp; &nbsp;</span>
-                  Độ nhạy : {(indexMatric.sens * 100).toFixed(2)}%
-                </h4>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleCheck} />
-                  <span>&nbsp; &nbsp;</span>
-                  Độ đặc hiệu : {(indexMatric.spec * 100).toFixed(2)}%
-                </h4>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleCheck} />
-                  <span>&nbsp; &nbsp;</span>
-                  F1 :%
-                </h4>
-              </>
+                    <h4>
+                      <FontAwesomeIcon icon={faCircleCheck} />
+                      <span>&nbsp; &nbsp;</span>
+                      Độ nhạy : {(indexMatric.sens * 100).toFixed(2)}%
+                    </h4>
+                    <h4>
+                      <FontAwesomeIcon icon={faCircleCheck} />
+                      <span>&nbsp; &nbsp;</span>
+                      Độ đặc hiệu : {(indexMatric.spec * 100).toFixed(2)}%
+                    </h4>
+                    {/* <h4>
+                    <FontAwesomeIcon icon={faCircleCheck} />
+                    <span>&nbsp; &nbsp;</span>
+                    F1 :%
+                  </h4> */}
+
+                    <Table
+                      dataSource={dataMetricTest}
+                      pagination={{ position: [] }}
+                    >
+                      <Table.Column
+                        key=""
+                        title=""
+                        dataIndex="name"
+                      ></Table.Column>
+                      <Table.Column
+                        key="Precision"
+                        title="Precision"
+                        dataIndex="Precision"
+                      ></Table.Column>
+                      <Table.Column
+                        key="Recall"
+                        title="Recall"
+                        dataIndex="Recall"
+                      ></Table.Column>
+                      <Table.Column
+                        key="F1"
+                        title="F1"
+                        dataIndex="F1"
+                      ></Table.Column>
+                    </Table>
+                  </Card>
+                </>
+              )
             )}
           </Card>
         </Col>

@@ -49,7 +49,8 @@ const DemoColumn = () => {
     fetchDataColumn();
   }, []);
   const fetchDataColumn = async () => {
-    for (let i = 1; i <= 8; ++i) {
+    for (let i = 0; i < 7; ++i) {
+      console.log(moment().day())
       const response = await dispatch(
         getNumberClientDay(moment().day(i).format("YYYY-MM-DD"))
       );
