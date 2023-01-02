@@ -105,11 +105,6 @@ function LayoutDefault({ children }) {
           marginLeft: "250px",
         }}
       >
-        {/* <Breadcrumb style={{ margin: "16px 0" }}>
-          <Breadcrumb.Item link>Trang chủ</Breadcrumb.Item>
-          <Breadcrumb.Item>CHuân</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb> */}
         <Header />
         <Content
           className="site-layout-background"

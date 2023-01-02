@@ -1,5 +1,6 @@
 import { Button, Card, Col, Row, Upload, Table } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
+import Loading from "../../../component/Loading/Loading";
 
 import axios from "axios";
 import { baseApiPredict } from "../../../request/apiPredict";
@@ -7,11 +8,6 @@ import FormData from "form-data";
 
 import { useState, useRef } from "react";
 import { useEffect } from "react";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import Loading from "../../../component/Loading/Loading";
-import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
 import styles from "./TestScreen.module.scss";
@@ -24,28 +20,10 @@ function TestScreen() {
   const [indexMatric, setIndexMatric] = useState();
   const [isLoadingUploađir, setIsLoadingUploađir] = useState(false);
   const [refesh, setrefesh] = useState(false);
-  // const isLoadingUpDir = useRef(false);
 
   const listImage = useRef();
   const dataMatric = useRef({ abnormal: {}, normal: {} });
   const handleDirectory = async (e) => {
-    // console.log(e.file.status);
-    // if (e.file.status !== "uploading") {
-    //   console.log("uploading");
-    // }
-    // if (e.file.status === "done") {
-    //   console.log("done");
-
-    // }
-    // props.onFileAdded(info.fileList);
-    // } else if (e.file.status === "error") {
-    //   message.error(`${info.file.name} file upload failed.`);
-    // }
-    // if (e.file.status == "uploading") {
-    //   setIsLoadingUploađir(true);
-    // }
-    // setIsLoadingUploađir(false);
-
     listImage.current = e.fileList;
   };
 
@@ -99,32 +77,18 @@ function TestScreen() {
     const falseNormal = dataMatric?.current?.normal?.abnormal;
     const trueNormal = dataMatric?.current?.normal?.normal;
 
-    // abnormal
-    const PrecisionTrueAb = (
-      (trueAbnormal / (trueAbnormal + falseAbnormal)) *
-      100
-    ).toFixed(2);
+    //do do
+    const accuracy =
+      (trueAbnormal + trueNormal) /
+      (trueAbnormal + falseAbnormal + falseNormal + trueNormal);
 
-    const RecallTrueAb = (
-      (trueAbnormal / (trueAbnormal + falseNormal)) *
-      100
-    ).toFixed(2);
+    const recall = trueAbnormal / (trueAbnormal + falseAbnormal);
 
-    //  normal
-    const PrecisionFalseNor = (
-      (trueNormal / (trueNormal + falseNormal)) *
-      100
-    ).toFixed(2);
+    const sens = trueNormal / (trueNormal + falseNormal);
 
-    const RecallFalseNor = (
-      (trueAbnormal / (trueAbnormal + falseAbnormal)) *
-      100
-    ).toFixed(2);
+    const precision = trueAbnormal / (trueAbnormal + falseNormal);
 
-    const F1FalseNor = Number(
-      (2 * Number(PrecisionFalseNor) * Number(RecallFalseNor)) /
-        (Number(PrecisionFalseNor) + Number(RecallFalseNor))
-    ).toFixed(2);
+    const f1 = (2 * precision * recall) / (precision + recall);
 
     setDataTable([
       {
@@ -143,54 +107,30 @@ function TestScreen() {
 
     setDataMetricTest([
       {
-        name: "Chuẩn đoán có bệnh",
+        name: "Độ chính xác",
         key: "1",
-        Precision: PrecisionTrueAb,
-        Recall: RecallTrueAb,
-        F1: (
-          ((2 *
-            (trueAbnormal / (trueAbnormal + falseAbnormal)) *
-            (trueAbnormal / (trueAbnormal + falseNormal))) /
-            (trueAbnormal / (trueAbnormal + falseAbnormal) +
-              trueAbnormal / (trueAbnormal + falseNormal))) *
-          100
-        ).toFixed(2),
+        kq: (accuracy * 100).toFixed(2),
       },
       {
-        name: "Chuẩn đoán không bệnh",
-        key: "2",
-        Precision: PrecisionFalseNor,
-        Recall: RecallFalseNor,
-        F1: F1FalseNor,
+        name: "Độ nhạy",
+        kq: (recall * 100).toFixed(2),
+      },
+      {
+        name: "Độ đặc hiệu",
+        kq: (sens * 100).toFixed(2),
+      },
+      {
+        name: "Precision",
+        kq: (precision * 100).toFixed(2),
+      },
+      {
+        name: "F1",
+        kq: (f1 * 100).toFixed(2),
       },
     ]);
   };
 
-  useEffect(() => {
-    // const trueAbnormal = dataMatric?.current?.abnormal?.abnormal;
-    // const falseAbnormal = dataMatric?.current?.abnormal?.normal;
-
-    // const trueNormal = dataMatric?.current?.normal?.abnormal;
-    // const falseNormal = dataMatric?.current?.normal?.normal;
-    setIndexMatric({
-      accuracy:
-        (dataMatric?.current?.abnormal?.abnormal +
-          dataMatric.current.normal.normal) /
-        (dataMatric?.current?.abnormal?.abnormal +
-          dataMatric?.current?.normal?.abnormal +
-          dataMatric?.current?.abnormal?.normal +
-          dataMatric.current.normal.normal),
-      sens:
-        dataMatric?.current?.abnormal?.abnormal /
-        (dataMatric?.current?.abnormal?.abnormal +
-          dataMatric?.current?.abnormal?.normal),
-      spec:
-        dataMatric.current.normal.normal /
-        (dataMatric.current.normal.normal +
-          dataMatric?.current?.normal?.abnormal),
-      // precision :
-    });
-  }, [dataTable]);
+  useEffect(() => {}, [dataTable]);
 
   return (
     <div className={cx("wraper")}>
@@ -222,23 +162,28 @@ function TestScreen() {
           >
             Xóa
           </Button> */}
-
         </Col>
         <Col span={12}>
           <Card title="Kết quả thử nghiệm" bordered={false}>
-            <Table dataSource={dataTable} pagination={{ position: [] }}>
-              <Table.Column key="name" title="" dataIndex="name"></Table.Column>
-              <Table.Column
-                key="Abnormal"
-                title="Bệnh"
-                dataIndex="Abnormal"
-              ></Table.Column>
-              <Table.Column
-                key="Normal"
-                title="Không bệnh"
-                dataIndex="Normal"
-              ></Table.Column>
-            </Table>
+            <Card title="Ma trận nhầm lẫn">
+              <Table dataSource={dataTable} pagination={{ position: [] }}>
+                <Table.Column
+                  key="name"
+                  title=""
+                  dataIndex="name"
+                ></Table.Column>
+                <Table.Column
+                  key="Abnormal"
+                  title="Bệnh"
+                  dataIndex="Abnormal"
+                ></Table.Column>
+                <Table.Column
+                  key="Normal"
+                  title="Không bệnh"
+                  dataIndex="Normal"
+                ></Table.Column>
+              </Table>
+            </Card>
             {statusTestModal === false ? (
               <Loading />
             ) : (
@@ -246,54 +191,22 @@ function TestScreen() {
               statusTestModal && (
                 <>
                   <Card
-                    title={"Đánh giá mô hình:"}
+                    title={"Kết quả đánh giá:"}
                     style={{ marginTop: "30px" }}
                   >
-                    <h4>
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                      <span>&nbsp; &nbsp;</span>
-                      Độ chính xác : {(indexMatric.accuracy * 100).toFixed(2)} %
-                    </h4>
-
-                    <h4>
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                      <span>&nbsp; &nbsp;</span>
-                      Độ nhạy : {(indexMatric.sens * 100).toFixed(2)}%
-                    </h4>
-                    <h4>
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                      <span>&nbsp; &nbsp;</span>
-                      Độ đặc hiệu : {(indexMatric.spec * 100).toFixed(2)}%
-                    </h4>
-                    {/* <h4>
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                    <span>&nbsp; &nbsp;</span>
-                    F1 :%
-                  </h4> */}
-
                     <Table
                       dataSource={dataMetricTest}
                       pagination={{ position: [] }}
                     >
                       <Table.Column
                         key=""
-                        title=""
+                        title="Độ đo"
                         dataIndex="name"
                       ></Table.Column>
                       <Table.Column
-                        key="Precision"
-                        title="Precision"
-                        dataIndex="Precision"
-                      ></Table.Column>
-                      <Table.Column
-                        key="Recall"
-                        title="Recall"
-                        dataIndex="Recall"
-                      ></Table.Column>
-                      <Table.Column
-                        key="F1"
-                        title="F1"
-                        dataIndex="F1"
+                        key="kq"
+                        title="Kết quả"
+                        dataIndex="kq"
                       ></Table.Column>
                     </Table>
                   </Card>

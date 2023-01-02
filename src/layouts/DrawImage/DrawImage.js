@@ -11,7 +11,6 @@ const DrawImage = ({ children, modalFeedBack, listBoundingBox }) => {
   const [newAnnotation, setNewAnnotation] = useState([]);
 
   const handleMouseDown = (event) => {
-    // console.log(event.target);
     if (newAnnotation.length === 0) {
       const { x, y } = event.target.getStage().getPointerPosition();
       setNewAnnotation([{ x, y, width: 0, height: 0, key: "0" }]);

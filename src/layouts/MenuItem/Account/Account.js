@@ -4,14 +4,8 @@ import {
   Input,
   Button,
   Radio,
-  Select,
-  Cascader,
   DatePicker,
-  InputNumber,
-  TreeSelect,
-  Switch,
   Checkbox,
-  Upload,
   Card,
   Modal,
 } from "antd";
@@ -44,14 +38,14 @@ function Account() {
     setIsModalOpen(false);
   };
 
-  const handleEditAccount = async(values) => {
+  const handleEditAccount = async (values) => {
     const response = await dispatch(
       changeInfomationUser({ data: values, id: currentUser._id })
     );
     // console.log(response);
     if (changeInfomationUser.fulfilled.match(response)) {
-      dispatch(getUser({id:currentUser._id}));
-      alert("Success")
+      dispatch(getUser({ id: currentUser._id }));
+      alert("Success");
     }
   };
 

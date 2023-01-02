@@ -6,7 +6,6 @@ import {
   getClients,
   updateClient,
 } from "../../../../stores/slice/tableClientSlice";
-import FormClientInfo from "../../Predict/components/FormClientInfo";
 
 import { Form, Input, Radio, InputNumber, Modal } from "antd";
 import { useRef } from "react";
@@ -34,12 +33,12 @@ function ModalUpdateClient({ isModalOpen, handleCancel }) {
       address: dataClientDetail.address,
       description: dataClientDetail.description,
     };
-    // console.log({ id: dataClientDetail._id, data: data });
+
     const res = await dispatch(
       updateClient({ id: dataClientDetail._id, data: data })
     );
     if (updateClient.fulfilled.match(res)) {
-      dispatch(getClients())
+      dispatch(getClients());
       alert("Success");
       handleCancel();
     }

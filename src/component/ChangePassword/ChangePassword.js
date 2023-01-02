@@ -37,15 +37,6 @@ function ChangePassword() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    console.log(dataChangePw,idUser);
-    // const response = await dispatch(
-    //   changePassword({...dataChangePw,id:idUser})
-    // );
-    // if (changePassword.fulfilled.match(response)) {
-    //   handleClose();
-    //   alert("Success");
-    //   // loginUser({ username, password }, dispatch, navigate);
-    // }
   };
 
   // useEffect(() => {
