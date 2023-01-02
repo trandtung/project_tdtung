@@ -7,7 +7,7 @@ const predictImgSlice = createSlice({
   name: "predict",
   initialState: {
     error: null,
-    isLoading: null,
+    isLoading: false,
     listImage:null
   },
   extraReducers: (builder) => {

@@ -145,7 +145,7 @@ function ClientTable() {
           <Button
             danger
             onClick={() => {
-              // console.log(record);
+              console.log(record);
               setCurrentIdClient(record.key);
               setConfirmDelete(true);
             }}

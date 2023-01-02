@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Upload, Table, Space } from "antd";
+import { Button, Card, Col, Row, Upload, Table } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import axios from "axios";
@@ -7,39 +7,45 @@ import FormData from "form-data";
 
 import { useState, useRef } from "react";
 import { useEffect } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../../../component/Loading/Loading";
+import { Link } from "react-router-dom";
 
 import classNames from "classnames/bind";
 import styles from "./TestScreen.module.scss";
 const cx = classNames.bind(styles);
 
 function TestScreen() {
-  // const dataa = [
-  //   {
-  //     name: "Chuẩn đoán có bệnh",
-  //     key: "1",
-  //     Precision: 0,
-  //     Recall: 0,
-  //     F1: 0,
-  //   },
-  //   {
-  //     name: "Chuẩn đoán không bệnh",
-  //     key: "2",
-  //     Precision: 0,
-  //     Recall: 0,
-  //     F1: 0,
-  //   },
-  // ];
   const [dataMetricTest, setDataMetricTest] = useState();
-
   const [statusTestModal, setStstusTestModal] = useState(null);
   const [dataTable, setDataTable] = useState([]);
   const [indexMatric, setIndexMatric] = useState();
+  const [isLoadingUploađir, setIsLoadingUploađir] = useState(false);
+  const [refesh, setrefesh] = useState(false);
+  // const isLoadingUpDir = useRef(false);
+
   const listImage = useRef();
   const dataMatric = useRef({ abnormal: {}, normal: {} });
   const handleDirectory = async (e) => {
+    // console.log(e.file.status);
+    // if (e.file.status !== "uploading") {
+    //   console.log("uploading");
+    // }
+    // if (e.file.status === "done") {
+    //   console.log("done");
+
+    // }
+    // props.onFileAdded(info.fileList);
+    // } else if (e.file.status === "error") {
+    //   message.error(`${info.file.name} file upload failed.`);
+    // }
+    // if (e.file.status == "uploading") {
+    //   setIsLoadingUploađir(true);
+    // }
+    // setIsLoadingUploađir(false);
+
     listImage.current = e.fileList;
   };
 
@@ -51,7 +57,7 @@ function TestScreen() {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then(function (response) {
-        formData.name == "abnormal"
+        formData.name === "abnormal"
           ? (dataMatric.current = {
               ...dataMatric.current,
               abnormal: response.data,
@@ -120,7 +126,6 @@ function TestScreen() {
         (Number(PrecisionFalseNor) + Number(RecallFalseNor))
     ).toFixed(2);
 
-    // console.log(F1FalseNor);
     setDataTable([
       {
         name: "Chuẩn đoán có bệnh",
@@ -162,11 +167,11 @@ function TestScreen() {
   };
 
   useEffect(() => {
-    const trueAbnormal = dataMatric?.current?.abnormal?.abnormal;
-    const falseAbnormal = dataMatric?.current?.abnormal?.normal;
+    // const trueAbnormal = dataMatric?.current?.abnormal?.abnormal;
+    // const falseAbnormal = dataMatric?.current?.abnormal?.normal;
 
-    const trueNormal = dataMatric?.current?.normal?.abnormal;
-    const falseNormal = dataMatric?.current?.normal?.normal;
+    // const trueNormal = dataMatric?.current?.normal?.abnormal;
+    // const falseNormal = dataMatric?.current?.normal?.normal;
     setIndexMatric({
       accuracy:
         (dataMatric?.current?.abnormal?.abnormal +
@@ -196,17 +201,28 @@ function TestScreen() {
               //   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               directory
               onChange={handleDirectory}
+              showUploadList="false"
             >
               <Button icon={<UploadOutlined />}>Upload Directory</Button>
+              {isLoadingUploađir && <Loading />}
             </Upload>
           </Card>
           <Button
             type="primary"
             onClick={handlTest}
-            disabled={statusTestModal === false}
+            disabled={statusTestModal === false || isLoadingUploađir}
           >
             Thử nghiệm
           </Button>
+
+          {/* <Button
+            type="link"
+            danger
+            href="/predict"
+          >
+            Xóa
+          </Button> */}
+
         </Col>
         <Col span={12}>
           <Card title="Kết quả thử nghiệm" bordered={false}>
@@ -223,7 +239,7 @@ function TestScreen() {
                 dataIndex="Normal"
               ></Table.Column>
             </Table>
-            {statusTestModal == false ? (
+            {statusTestModal === false ? (
               <Loading />
             ) : (
               indexMatric?.accuracy &&

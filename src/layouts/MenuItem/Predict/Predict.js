@@ -42,31 +42,34 @@ const FormDisabledDemo = () => {
   const [modalFeedBack, setModalFeedBack] = useState(false);
   const [pathPreviewImg, setPathpreviewImg] = useState();
   const [currentIdFbImg, setCurrentIdFbImg] = useState();
+  const [loadingPredict, setLoadingPredict] = useState(false);
 
   const handlePredict = async (values) => {
     setValuesFormClientInfo(values);
+    setLoadingPredict(true);
     let formData = new FormData();
     const listImg = selectedFile.map((item, index) => {
       return formData.append("file", item.originFileObj);
     });
 
-    try {
-      const response = await axios({
-        method: "post",
-        url: `${baseApiPredict}predict`,
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
+    // try {
+    const response = await axios({
+      method: "post",
+      url: `${baseApiPredict}predict`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        setStatePredict(true);
+        setLoadingPredict(false);
+        setListImgPredicted(response.data.data);
       })
-        .then(function (response) {
-          setStatePredict(true);
-          setListImgPredicted(response.data.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+      .catch(function (error) {
+        console.log(error);
+      });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const handleCancel = () => setPreviewOpen(false);
@@ -140,7 +143,6 @@ const FormDisabledDemo = () => {
     );
     setModalFeedBack(false);
   };
-  console.log(listImgPredicted);
 
   return (
     <>
@@ -179,7 +181,7 @@ const FormDisabledDemo = () => {
           {/* Client infomation form */}
           <FormClientInfo />
           <Form.Item label=" ">
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loadingPredict}>
               Chẩn đoán
             </Button>
           </Form.Item>

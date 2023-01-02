@@ -14,6 +14,7 @@ import {
   getTotalImg,
 } from "../../../stores/slice/homeSlice";
 import DemoColumn from "./components/PieImage";
+import { Link } from "react-router-dom";
 const cx = classNames.bind(styles);
 
 function HomePage() {
@@ -63,7 +64,10 @@ function HomePage() {
         </Card>
         <Card>
           <div className={cx("info_statistical_feedBack")}>
-            <DemoColumn />
+            {/* <div> */}
+              <DemoColumn />
+              {/* <b>Thống kê lượt chẩn đoán</b> */}
+            {/* </div> */}
             <div className={cx("info_statistical_history")}>
               <Card
                 title="Phản hồi gần đây:"
@@ -77,9 +81,7 @@ function HomePage() {
                       title="Đã phản hồi ảnh của bệnh nhân:"
                       extra={
                         <div>
-                          <a href="http://localhost:3000/clients/638760223cca754ed651ad4d">
-                            Chi tiết
-                          </a>
+                          <Link to={`/clients/${item._id}`}>Chi tiết</Link>
                         </div>
                       }
                       style={{ marginBottom: "20px" }}

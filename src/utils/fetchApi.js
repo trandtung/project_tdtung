@@ -125,17 +125,17 @@ export const getTotalImgApi = async () => {
     });
 };
 
-// api cũ
 export const updatePasswordApi = async (user) => {
-  return await ApiClient.patch(`/api/users/${user.id}`, {
-    username: user.username,
-    newPassword: user.newPassword,
+  return await ApiClient.patch(`/user/${user.id}/changepw`, {
+    currentPw: user.currentPw,
+    newPw: user.newPw,
   })
     .then((response) => response)
     .catch((error) => {
       return error.response;
     });
 };
+// api cũ
 
 export const registerUser = async (user) => {
   return await ApiClient.post("/auth/register", user)
