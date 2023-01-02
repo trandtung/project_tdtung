@@ -187,8 +187,8 @@ function TestScreen() {
             {statusTestModal === false ? (
               <Loading />
             ) : (
-              indexMatric?.accuracy &&
-              statusTestModal && (
+              dataMetricTest &&
+               (
                 <>
                   <Card
                     title={"Kết quả đánh giá:"}
